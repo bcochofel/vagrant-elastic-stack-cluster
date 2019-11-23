@@ -1,0 +1,8 @@
+---
+- hosts: kibana-1,logstash-1
+  become: true
+  tasks:
+    - name: Install filebeat
+      yum:
+        name: filebeat
+        state: present

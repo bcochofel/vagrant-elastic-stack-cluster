@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Configure swapiness
+      sysctl:
+        name: vm.swappiness
+        value: 1
+        state: present
+    - name: Install vim
+      yum:
+        name: vim
+        state: present

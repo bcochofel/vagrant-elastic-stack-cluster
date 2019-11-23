@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - { role: dj-wasabi.telegraf, tags: ['telegraf'] }
+  vars:
+    telegraf_agent_version: 1.12.1
+    telegraf_agent_output:
+      - type: prometheus_client
+        config:
+          - listen = ":9273"

@@ -1,0 +1,5 @@
+- src: elastic.elasticsearch
+  version: 7.1.1
+- src: dj-wasabi.telegraf
+- src: cloudalchemy.prometheus
+- src: cloudalchemy.grafana

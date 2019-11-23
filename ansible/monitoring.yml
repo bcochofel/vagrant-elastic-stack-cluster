@@ -1,0 +1,42 @@
+---
+- hosts: kibana_nodes
+  roles:
+  - cloudalchemy.prometheus
+  - cloudalchemy.grafana
+  vars:
+    prometheus_targets:
+      node:
+      - targets:
+        - master-1:9273
+#        - master-2:9273
+#        - master-3:9273
+        - data-1:9273
+        - data-2:9273
+        - data-3:9273
+        - logstash-1:9273
+#        - logstash-2:9273
+#        - logstash-3:9273
+        - kibana-1:9273
+        labels:
+          env: elkdemo
+    grafana_security:
+      admin_user: admin
+      admin_password: password
+    grafana_metrics:
+      enabled: true
+    grafana_plugins:
+      - grafana-piechart-panel
+    grafana_datasources:
+      - name: prometheus
+        type: prometheus
+        access: proxy
+        url: 'http://localhost:9090'
+        basicAuth: false
+      - name: elasticsearch
+        type: elasticsearch
+        access: proxy
+        url: 'http://localhost:9200'
+    grafana_dashboards:
+      - dashboard_id: 6149
+        revision_id: 1
+        datasource: prometheus

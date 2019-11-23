@@ -1,0 +1,41 @@
+---
+- hosts: kibana_nodes
+  become: true
+  roles:
+    - role: elastic.elasticsearch
+  vars:
+    es_version: 7.3.2
+    es_data_dirs:
+      - "/opt/elasticsearch/data"
+    es_log_dir: "/opt/elasticsearch/logs"
+    es_config:
+      cluster.name: "vagrant-elk-demo"
+      node.name: "{{ inventory_hostname }}"
+      network.host: "localhost"
+      http.port: 9200
+      cluster.initial_master_nodes: "{{ cluster_initial_master_nodes }}"
+      discovery.seed_hosts: "{{ discovered_seed_hosts }}"
+      transport.host: "{{ ansible_eth1.ipv4.address }}"
+      transport.port: 9300
+      node.master: false
+      node.voting_only: false 
+      node.data: false
+      node.ingest: false
+      node.ml: false
+      xpack.ml.enabled: true
+      cluster.remote.connect: false
+      bootstrap.memory_lock: false
+    es_heap_size: 512m
+
+- hosts: kibana_nodes
+  become: true
+  tasks:
+    - name: Install kibana
+      yum:
+        name: kibana
+        state: present
+    - name: Restart kibana
+      systemd:
+        state: restarted
+        daemon_reload: yes
+        name: kibana

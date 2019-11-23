@@ -1,0 +1,28 @@
+---
+- hosts: data_nodes
+  become: true
+  roles:
+    - role: elastic.elasticsearch
+  vars:
+    es_version: 7.3.2
+    es_data_dirs:
+      - "/opt/elasticsearch/data"
+    es_log_dir: "/opt/elasticsearch/logs"
+    es_config:
+      cluster.name: "vagrant-elk-demo"
+      node.name: "{{ inventory_hostname }}"
+      network.host: "{{ ansible_eth1.ipv4.address }}"
+      http.port: 9200
+      cluster.initial_master_nodes: "{{ cluster_initial_master_nodes }}"
+      discovery.seed_hosts: "{{ discovered_seed_hosts }}"
+      transport.port: 9300
+      node.master: false
+      node.voting_only: false 
+      node.data: true
+      node.ingest: false
+      node.ml: false
+      xpack.ml.enabled: true
+      cluster.remote.connect: false
+      bootstrap.memory_lock: false
+    es_heap_size: 512m
+    es_api_host: "{{ ansible_eth1.ipv4.address }}"
